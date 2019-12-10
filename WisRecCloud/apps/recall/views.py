@@ -1,5 +1,4 @@
 import json
-
 from django.db import DatabaseError
 from django.views import View
 from django import http
@@ -9,7 +8,6 @@ from apps.recall.models import ClientInfo, JieCardData
 # Create your views here.
 
 class RecallData(View):
-
     def get(self, request):
         pass
 

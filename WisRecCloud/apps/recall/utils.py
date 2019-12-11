@@ -138,15 +138,14 @@ def get_key_words(digest):
               'DB2', 'TOMCAT', 'SCRUM', 'POSTGRESQL', 'SWARM', 'KUBERNETES', '推荐系统', '用户画像',
               '人工智能', 'CELERY', 'JSON', 'SHELL', 'HBASE', 'KAFKA', 'XPATH', 'REQUESTS',
               'BOOTSTRAP', 'HTTP', 'TCP', 'UDP', 'HTTPS', '数据分析', '数据挖掘', 'UNITTEST', "JWT", "GO",
-              "OCTAVE", "爬虫", "JIRA", "K8S", " RESTFUL", "TWISTED", "应届生", "PYTHON", "实习"]
+              "OCTAVE", "爬虫", "JIRA", "K8S", " RESTFUL", "TWISTED", "应届生", "PYTHON", "实习", "架构", "大数据"]
     for i in ls_add:
-        jieba.add_word(i)
-    keywords = jieba.cut(digest, cut_all=False)
+        jieba.add_word(i)  # 添加词典
+    keywords = jieba.cut(str(digest).upper(), cut_all=False)  # 进行分词
     kws = list()
-    for kw in keywords:
-        if kw not in stop_words_list and kw != " " and kw != "  ":
-            if kw.upper() in ls_add:
-                kws.append(kw)
+    for kw in keywords:  # 筛选
+        if kw.upper() in ls_add:
+            kws.append(kw)
+    kws = list(set(kws))
     _result = ",".join(kws)
     return _result
-

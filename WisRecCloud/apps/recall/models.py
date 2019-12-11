@@ -20,7 +20,7 @@ class JieCardData(models.Model):
     CHOICE = (('1', "完成"), ('0', "未完成"))
     client_id = models.ForeignKey(ClientInfo, related_name="Client")
     data_id = models.IntegerField()  # 整数
-    digest = models.CharField(max_length=2000)
+    # digest = models.CharField(max_length=2000)
     key_digest = models.CharField(max_length=500, blank=True)
     indexer = models.CharField(max_length=4, choices=CHOICE, default="0")
 

@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include("apps.index.urls", namespace="index")),
     url(r'^', include("apps.recall.urls", namespace="recall")),
+    url(r'^', include("apps.recommend.urls", namespace="recommend"))
 ]

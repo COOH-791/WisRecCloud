@@ -1,5 +1,4 @@
 import json
-
 from celery import Celery
 from django.db import DatabaseError
 from django.views import View

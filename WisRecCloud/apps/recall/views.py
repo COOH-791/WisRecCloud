@@ -3,7 +3,7 @@ from celery import Celery
 from django.db import DatabaseError
 from django.views import View
 from django import http
-from apps.recall.models import ClientInfo, JieCardData
+from apps.recall.models import ClientInfo, JieCardData, MovieCFData
 from apps.recall.utils import get_info_words, get_key_words
 
 
@@ -22,12 +22,6 @@ class RecallData(View):
         """
         app_id, api_key, secret_key = request.GET.get("app_id"), request.GET.get("api_key"), request.GET.get(
             "secret_key")
-
-        if not all([app_id, api_key, secret_key]):  # 认证数据
-            return http.JsonResponse({"code": '3001', "statement": "Missing the necessary parameters"})
-        _user = ClientInfo.objects.filter(app_id=app_id).filter(api_key=api_key).filter(secret_key=secret_key)
-        if not _user:
-            return http.JsonResponse({"code": '3002', "statement": "Have no right to access"})
 
         _data = json.loads(request.body.decode())  # 判断数据
         temp_id, digest = _data["id"], _data["digest"]
@@ -67,12 +61,6 @@ class RecallWeiBo(View):
         """
         app_id, api_key, secret_key = request.GET.get("app_id"), request.GET.get("api_key"), request.GET.get(
             "secret_key")
-        if not all([app_id, api_key, secret_key]):  # 认证token是否有效
-            return http.JsonResponse({"code": '3001', "statement": "Missing the necessary parameters"})
-        _user = ClientInfo.objects.filter(app_id=app_id).filter(api_key=api_key).filter(secret_key=secret_key)
-        if not _user:
-            return http.JsonResponse({"code": '3002', "statement": "Have no right to access"})
-
         _data = json.loads(request.body.decode())  # 判断数据
         temp_id, digest = _data["id"], _data["digest"]
         if not all([temp_id, digest]):  # 判断数据是否齐全
@@ -98,4 +86,41 @@ class RecallWeiBo(View):
             backend='redis://localhost:6379/8'  # 将调用的结果存储到Redis中
         )
         ret = app.send_task('task.get_key', args=[user_api_key, api_key])
-        return http.JsonResponse({"666": "ok"})
+        return http.JsonResponse({"code": "200", "statement": "successful"})
+
+
+class RecallMovie(View):
+    def put(self, request):
+        """
+        UserCF ItemCF 数据源召回接口
+        :param request:
+        :return:
+        """
+        # 1.获取数据
+        api_key = request.GET.get("api_key")
+        _data = json.loads(request.body.decode())
+        user_id, movie_id, ratting = _data["user_id"], _data["movie_id"], _data["ratting"]
+        # 2.判断数据是否符合规格
+        if not all([user_id, movie_id, ratting]):
+            return http.JsonResponse({"code": '3003', "statement": "The transmitted data is abnormal"})
+        if not str(user_id).isdigit():
+            return http.JsonResponse({"code": '3004', "statement": "The transmitted data is abnormal"})
+        if not str(movie_id).isdigit():
+            return http.JsonResponse({"code": '3004', "statement": "The transmitted data is abnormal"})
+        try:  # 判断是否为小数
+            _ = int(ratting)
+        except ValueError:
+            return http.JsonResponse({"code": '3004', "statement": "The transmitted data is abnormal"})
+        # 3.入库
+        try:  # 入库
+            databases = MovieCFData(
+                user_id=user_id,
+                movie_id=movie_id,
+                ratting=ratting,
+                client_id_id=ClientInfo.objects.get(api_key=api_key).id
+            )
+            databases.save()
+        except DatabaseError:
+            return http.JsonResponse({'code': "3008", "statement": "Data insert failed"})
+        # 4.计算
+        return http.JsonResponse({"code": "200", "statement": "successful"})

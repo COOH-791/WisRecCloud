@@ -31,3 +31,17 @@ class JieCardData(models.Model):
     class Meta:
         db_table = 'jie_card_data'
         verbose_name_plural = "杰卡德数据表"
+
+
+class MovieCFData(models.Model):
+    client_id = models.ForeignKey(ClientInfo, related_name="Client_id")
+    user_id = models.IntegerField()  # 用户id
+    movie_id = models.IntegerField()  # 电影id
+    ratting = models.FloatField()  # 评分
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        db_table = 'movie_cf_data'
+        verbose_name_plural = "杰卡德数据表"

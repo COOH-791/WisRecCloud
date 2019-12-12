@@ -1,12 +1,36 @@
 import jieba
 
 
-def get_key_words(digest):
+def get_info_words(digest):
     """
-    提取数据的关键字
+    提取招聘数据中的数据的关键字
     :param digest:
     :return:
     """
+    ls_add = ['SQL', 'C++', 'HADOOP', 'JAVA', 'R', 'SAS', 'SPARK', 'HIVE', 'ABTEST',
+              'MYSQL', 'MATLAB', 'FLASK', 'REDIS', 'MONGODB', 'DJANGO', 'TENSORFLOW', 'CAFFE',
+              'MXNET', 'KERAS', 'SELENIUM', 'APPIUM', 'NUMPY', 'REQUEST', 'HTML',
+              'CSS', 'SCRAPY', 'JAVASCRIPT', 'NGINX', 'SOCKETNODEJS', 'APACHE',
+              'PANDAS', 'MATPLOTLIB', 'VUE', 'WEBMAGIC', 'NUTCH', 'HERITRIX', 'LINUX',
+              'CENTOS', 'UBUNTU', '机器学习', '深度学习', 'MEMCACHE', 'GIT', 'SVN', 'TORNADO', 'UNIX',
+              'ORACLE', 'DOCKER', 'CODEREVIEW', 'ABACONDA', '后端', '测试', 'SQLALCHEMY', 'RABBITMQ',
+              'DB2', 'TOMCAT', 'SCRUM', 'POSTGRESQL', 'SWARM', 'KUBERNETES', '推荐系统', '用户画像',
+              '人工智能', 'CELERY', 'JSON', 'SHELL', 'HBASE', 'KAFKA', 'XPATH', 'REQUESTS',
+              'BOOTSTRAP', 'HTTP', 'TCP', 'UDP', 'HTTPS', '数据分析', '数据挖掘', 'UNITTEST', "JWT", "GO",
+              "OCTAVE", "爬虫", "JIRA", "K8S", " RESTFUL", "TWISTED", "应届生", "PYTHON", "实习", "架构", "大数据"]
+    for i in ls_add:
+        jieba.add_word(i)  # 添加词典
+    keywords = jieba.cut(str(digest).upper(), cut_all=False)  # 进行分词
+    kws = list()
+    for kw in keywords:  # 筛选
+        if kw.upper() in ls_add:
+            kws.append(kw)
+    kws = list(set(kws))
+    _result = ",".join(kws)
+    return _result
+
+
+def get_key_words(digest):
     stop_words_list = ['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '--', '.', '..', '...',
                        '......', '...................', './', '.一', '.数', '.日', '/', '//', '0', '1', '2', '3', '4', '5',
                        '6', '7', '8', '9', ':', '://', '::', ';', '<', '=', '>', '>>', '?', '@', 'A', 'Lex', '[', '\\',
@@ -128,24 +152,10 @@ def get_key_words(digest):
                        '［④ｂ］', '［④ｃ］', '［④ｄ］', '［④ｅ］', '［⑤］', '［⑤］］', '［⑤ａ］', '［⑤ｂ］', '［⑤ｄ］', '［⑤ｅ］', '［⑤ｆ］', '［⑥］',
                        '［⑦］', '［⑧］', '［⑨］', '［⑩］', '［＊］', '［－', '［］', '］', '］∧′＝［', '］［', '＿', 'ａ］', 'ｂ］', 'ｃ］', 'ｅ］',
                        'ｆ］', 'ｎｇ昉', '｛', '｛－', '｜', '｝', '｝＞', '～', '～±', '～＋', '￥', '岗位']  # 加载停用词表
-    ls_add = ['SQL', 'C++', 'HADOOP', 'JAVA', 'R', 'SAS', 'SPARK', 'HIVE', 'ABTEST',
-              'MYSQL', 'MATLAB', 'FLASK', 'REDIS', 'MONGODB', 'DJANGO', 'TENSORFLOW', 'CAFFE',
-              'MXNET', 'KERAS', 'SELENIUM', 'APPIUM', 'NUMPY', 'REQUEST', 'HTML',
-              'CSS', 'SCRAPY', 'JAVASCRIPT', 'NGINX', 'SOCKETNODEJS', 'APACHE',
-              'PANDAS', 'MATPLOTLIB', 'VUE', 'WEBMAGIC', 'NUTCH', 'HERITRIX', 'LINUX',
-              'CENTOS', 'UBUNTU', '机器学习', '深度学习', 'MEMCACHE', 'GIT', 'SVN', 'TORNADO', 'UNIX',
-              'ORACLE', 'DOCKER', 'CODEREVIEW', 'ABACONDA', '后端', '测试', 'SQLALCHEMY', 'RABBITMQ',
-              'DB2', 'TOMCAT', 'SCRUM', 'POSTGRESQL', 'SWARM', 'KUBERNETES', '推荐系统', '用户画像',
-              '人工智能', 'CELERY', 'JSON', 'SHELL', 'HBASE', 'KAFKA', 'XPATH', 'REQUESTS',
-              'BOOTSTRAP', 'HTTP', 'TCP', 'UDP', 'HTTPS', '数据分析', '数据挖掘', 'UNITTEST', "JWT", "GO",
-              "OCTAVE", "爬虫", "JIRA", "K8S", " RESTFUL", "TWISTED", "应届生", "PYTHON", "实习", "架构", "大数据"]
-    for i in ls_add:
-        jieba.add_word(i)  # 添加词典
-    keywords = jieba.cut(str(digest).upper(), cut_all=False)  # 进行分词
+    keywords = jieba.cut(digest, cut_all=True)
     kws = list()
-    for kw in keywords:  # 筛选
-        if kw.upper() in ls_add:
+    for kw in keywords:
+        if kw not in stop_words_list and kw != " " and kw != " ":
             kws.append(kw)
-    kws = list(set(kws))
     _result = ",".join(kws)
     return _result

@@ -123,4 +123,13 @@ class RecallMovie(View):
         except DatabaseError:
             return http.JsonResponse({'code': "3008", "statement": "Data insert failed"})
         # 4.计算
+        user_api_key = ClientInfo.objects.get(api_key=api_key).id
+        print(user_api_key)
+        app = Celery(
+            # broker='amqp://guest@lo4calhost//',  # 消息队列的url
+            # backend='amqp://guest@localhost//',  # 将调用的结果存储到MQ中
+            backend='redis://localhost:6379/8'  # 将调用的结果存储到Redis中
+        )
+        ret = app.send_task('task.UserSimilarityBest', args=[user_api_key, api_key])
+
         return http.JsonResponse({"code": "200", "statement": "successful"})

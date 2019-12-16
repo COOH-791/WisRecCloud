@@ -58,6 +58,11 @@ def get_key(user_api_key, api_key):
 
 
 def load_data(user_api_key):
+    """
+    加载数据库中的数据集
+    :param user_api_key:
+    :return:
+    """
     conn = pymysql.connect(  # 链接MYSQL
         host='localhost',
         user='root',
@@ -126,5 +131,40 @@ def UserSimilarityBest(user_api_key, api_key):
     result = {
         "api_key": api_key,
         "result": userSim
+    }
+    return result
+
+
+@app.task
+def ItemSimilarityBest(user_api_key, api_key):
+    data = load_data(user_api_key)
+    itemSim, item_user_count, count = dict(), dict(), dict()  # 构造共现矩阵
+    for user, _item in data.items():
+        for i in _item.keys():
+            item_user_count.setdefault(i, 0)
+            if data[int(user)][i] > 0.0:
+                item_user_count[i] += 1
+            for j in _item.keys():
+                count.setdefault(i, {}).setdefault(j, 0)
+                if data[int(user)][i] > 0.0 and data[int(user)][j] > 0.0 and i != j:
+                    count[i][j] += 1
+    for i, related_items in count.items():
+        itemSim.setdefault(i, dict())
+        for j, cuv in related_items.items():
+            itemSim[i].setdefault(j, 0)
+            itemSim[i][j] = cuv / math.sqrt(item_user_count[i] * item_user_count[j])
+    # 替换redis中推荐数据
+    pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True, db=8)
+    conn = redis.StrictRedis(connection_pool=pool)
+    try:  # 如何未查询到数据,则是因为第一次创建则新建数据
+        for redis_name in conn.keys():
+            if api_key == json.loads(conn.get(redis_name))["result"]["api_key"]:
+                conn.delete(redis_name)
+    except KeyError:
+        pass
+
+    result = {
+        "api_key": api_key,
+        "result": itemSim
     }
     return result

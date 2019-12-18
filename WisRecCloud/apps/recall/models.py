@@ -46,3 +46,16 @@ class MovieCFData(models.Model):
     class Meta:
         db_table = 'movie_cf_data'
         verbose_name_plural = "杰卡德数据表"
+
+
+class WordKeyData(models.Model):
+    uc_id = models.ForeignKey(ClientInfo, related_name="uc_id")
+    data_id = models.IntegerField()  # 整数
+    key_digest = models.CharField(max_length=3000, blank=True)
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        db_table = 'word_key_data'
+        verbose_name_plural = "文章关键字提取"

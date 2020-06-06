@@ -42,7 +42,7 @@ cx-Freeze==5.1.1
 cycler==0.10.0
 decorator==4.3.0
 defusedxml==0.5.0
-Django==1.11.11
+Django==1.11.29
 django-redis==4.10.0
 djangorestframework==3.10.3
 dlib==19.7.0

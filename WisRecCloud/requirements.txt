@@ -35,7 +35,7 @@ comtypes==1.1.7
 constantly==15.1.0
 constants==0.6.0
 contrib==0.3.0
-cryptography==2.7
+cryptography==3.2
 cssselect==1.0.3
 cur==0.0.1
 cx-Freeze==5.1.1

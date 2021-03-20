@@ -97,7 +97,7 @@ javascripthon==0.10
 jdcal==1.4.1
 jedi==0.13.2
 jieba==0.39
-Jinja2==2.10.1
+Jinja2==2.11.3
 jmespath==0.9.4
 Js2Py==0.66
 jsonschema==2.6.0

@@ -173,7 +173,7 @@ pyecharts-jupyter-installer==0.0.3
 pyecharts-snapshot==0.1.10
 pygame==1.9.4
 PyGetWindow==0.0.5
-Pygments==2.3.1
+Pygments==2.7.4
 PyHamcrest==1.9.0
 PyInstaller==3.4
 pyjsparser==2.7.1

@@ -62,7 +62,7 @@ eventlet==0.25.1
 face-recognition==1.2.3
 face-recognition-models==0.3.0
 Flask==1.0.2
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 Flask-Mail==0.9.1
 Flask-Migrate==2.5.1
 flask-redis==0.4.0

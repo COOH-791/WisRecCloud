@@ -148,7 +148,7 @@ pdfplumber==0.5.14
 pefile==2018.8.8
 pickleshare==0.7.5
 pika==1.1.0
-Pillow==6.0.0
+Pillow==8.2.0
 pipenv==2018.11.26
 plotting==0.1.0
 pluggy==0.13.1

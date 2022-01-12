@@ -149,7 +149,7 @@ pefile==2018.8.8
 pickleshare==0.7.5
 pika==1.1.0
 Pillow==6.0.0
-pipenv==2018.11.26
+pipenv==2022.1.8
 plotting==0.1.0
 pluggy==0.13.1
 ply==3.11

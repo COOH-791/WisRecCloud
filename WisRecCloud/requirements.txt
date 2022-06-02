@@ -80,7 +80,7 @@ google-auth-oauthlib==0.4.1
 greenlet==0.4.15
 grpcio==1.19.0
 h5py==2.9.0
-html5lib==0.9999999
+html5lib==0.99999999
 hyperlink==19.0.0
 idna==2.8
 imageio==2.4.1

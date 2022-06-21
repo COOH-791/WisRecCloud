@@ -131,7 +131,7 @@ nbformat==4.4.0
 nltk==3.4.3
 notebook==5.7.4
 np==1.0.2
-numpy==1.16.2
+numpy==1.22.0
 oauthlib==3.1.0
 opencv-contrib-python==4.1.1.26
 opencv-python==4.1.1.26
